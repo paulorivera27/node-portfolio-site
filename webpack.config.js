@@ -1,7 +1,6 @@
-const path = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path')
 const autoprefixer = require('autoprefixer');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const javascript = {
   test: /\.(js)$/,
@@ -20,12 +19,12 @@ const postcss = {
 
 const styles = {
   test: /\.(scss)$/,
-  use: ExtractTextPlugin.extract(['css-loader?sourceMap', postcss, 'sass-loader?sourceMap'])
+  use: [MiniCssExtractPlugin.loader, 'css-loader?sourceMap', postcss, 'sass-loader?sourceMap']
 };
 
-const uglify = new webpack.optimize.UglifyJsPlugin({
-  compress: { warnings: false }
-});
+const plugins = [
+  new MiniCssExtractPlugin()
+]
 
 const config = {
   entry: {
@@ -36,15 +35,10 @@ const config = {
     path: path.resolve(__dirname, 'public', 'dist'),
     filename: '[name].bundle.js'
   },
-
   module: {
     rules: [javascript, styles]
   },
-  plugins: [uglify],
-  plugins: [
-    new ExtractTextPlugin('style.css'),
-  ]
+  plugins: plugins
 };
-process.noDeprecation = true;
 
-module.exports = config;
+module.exports = config
